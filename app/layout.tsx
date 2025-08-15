@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import { Mona_Sans } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Mona_Sans } from 'next/font/google';
+import './globals.css';
 
 const monaSans = Mona_Sans({
-  variable: "--font-mona-sans",
-  subsets: ["latin"],
+  variable: '--font-mona-sans',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Pitch Perfect AI",
-  description: "An AI-powered tool for preparing for mock interviews",
+  title: 'Pitch Perfect AI',
+  description: 'An AI-powered tool for preparing for mock interviews',
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang='en' className='dark'>
       <body className={`${monaSans.variable}  antialiased`}>{children}</body>
     </html>
   );
