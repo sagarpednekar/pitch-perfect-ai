@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   console.log('Rendering RootLayout');
   console.log(
-    'One more log statement to ensure the layout is working correctly'
+    'One more log statement to ensure the layout is working'
   );
 
   return (
