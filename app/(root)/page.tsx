@@ -1,6 +1,3 @@
-
 export default function Home() {
-  return (
-    <p>Pitch Perfect AI</p>
-  );
+  return <p>Pitch Perfect AI</p>;
 }
