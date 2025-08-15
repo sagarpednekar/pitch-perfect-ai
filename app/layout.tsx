@@ -17,8 +17,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log('Rendering RootLayout');
-
   return (
     <html lang='en' className='dark'>
       <body className={`${monaSans.variable}  antialiased`}>{children}</body>
