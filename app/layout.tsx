@@ -18,6 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   console.log('Rendering RootLayout');
+  console.log(
+    'One more log statement to ensure the layout is working correctly'
+  );
+
   return (
     <html lang='en' className='dark'>
       <body className={`${monaSans.variable}  antialiased`}>{children}</body>
