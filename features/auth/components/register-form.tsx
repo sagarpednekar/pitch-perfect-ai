@@ -2,13 +2,16 @@
 import FormField from '@/components/form/form-field';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { auth } from '@/core/db/client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { Register } from '@/features/auth/actions';
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
@@ -17,8 +20,6 @@ const formSchema = z.object({
 });
 
 function RegisterForm() {
-  toast.success('Account created successfully!');
-
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,17 +30,32 @@ function RegisterForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       console.log('Form submitted with values:', values);
+      const { name, email, password } = values;
+      const userCreds = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const result = await Register({
+        name,
+        email,
+        password,
+        uid: userCreds.user.uid,
+      });
+
+      if (result?.status === 'error') {
+        toast.error(result.message);
+        return;
+      }
       toast.success('Account created successfully!');
-      debugger;
-      router.push('/');
+      router.push('/login');
     } catch (error) {
       toast.error('Something went wrong, please try again later.');
       console.error('Error during form submission:', error);
     }
-    console.log(values);
   }
 
   return (

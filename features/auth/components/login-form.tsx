@@ -8,6 +8,10 @@ import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { auth } from '@/core/db/client';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { login } from '@/features/auth/actions';
 
 const formSchema = z.object({
   email: z.email(),
@@ -15,6 +19,7 @@ const formSchema = z.object({
 });
 
 function LoginForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -23,9 +28,22 @@ function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       console.log('Form submitted with values:', values);
+      const { email, password } = values;
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      const token = await user.user.getIdToken();
+      console.log('User signed in:', token);
+      if (!token) {
+        toast.error('Authentication failed, please try again.');
+        return;
+      }
+      await login({ email, token });
+      console.log('User signed in successfully:', user);
+      toast.success('Login successful!');
+      // Redirect or perform additional actions after successful login
+      router.push('/');
     } catch (error) {
       toast.error('Something went wrong, please try again later.');
       console.error('Error during form submission:', error);
@@ -67,7 +85,7 @@ function LoginForm() {
           </form>
         </Form>
         <p className='text-center'>
-          Don`&apos;`t have account ?
+          Don&apos;t have account ?
           <Link href='sign-up' className='font-bold text-user-primary ml-1'>
             Sign Up
           </Link>
